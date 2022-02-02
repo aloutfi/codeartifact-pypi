@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  Domain:
+    Type: 'AWS::CodeArtifact::Domain'
+    Properties:
+      DomainName: "domain"
+  UpstreamRepository:
+    Type: 'AWS::CodeArtifact::Repository'
+    Properties:
+      RepositoryName: "upstream-python-repo"
+      DomainName: !GetAtt Domain.Name
+      ExternalConnections:
+        - public:pypi
+  Repository:
+    Type: 'AWS::CodeArtifact::Repository'
+    Properties:
+      RepositoryName: "python-repo"
+      DomainName: !GetAtt Domain.Name
+      Upstreams:
+        - !GetAtt UpstreamRepository.Name
